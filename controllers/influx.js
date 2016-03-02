@@ -17,28 +17,64 @@ function getData(method, ctx) {
 		const data = ctx.request.body;
 		return _.isArray(data)? data : [data];
 	} else {
-		const query = ctx.query;
-		const series = query.series;
-		const tags = _.get(ctx, 'query.tags');
-		const values = _.get(ctx, 'query.values');
-
-		if (!series || !tags || !values) {
-			return;
+		let points = ctx.query.point;
+		if (!_.isArray(points)) {
+			points = [points];
 		}
-		const data = {
-			series: series,
-			tags: {},
-			values: {}
+		const getSeries = (str) => {
+			const reg = /series\((\S+?)\)/
+			const result = _.get(reg.exec(str), '[1]');
+			return result;
 		};
-		_.forEach(tags.split('||'), tmp => {
-			const arr = tmp.split('|');
-			data.tags[arr[0]] = arr[1];
-		});
 
-		_.forEach(values.split('||'), tmp => {
-			const arr = tmp.split('|');
-			data.values[arr[0]] = parseInt(arr[1]);
+		const getTags = (str) => {
+			const reg = /tags\((\S+?)\)/
+			const result = _.get(reg.exec(str), '[1]');
+			if (!result) {
+				return;
+			}
+			const tags = {};
+			_.forEach(result.split(','), tmp => {
+				const arr = tmp.split('|');
+				tags[arr[0]] = arr[1];
+			});
+			return tags;
+		};
+
+		const getValues = (str) => {
+			const reg = /values\((\S+?)\)/
+			const result = _.get(reg.exec(str), '[1]');
+			if (!result) {
+				return;
+			}
+			const values = {};
+			_.forEach(result.split(','), tmp => {
+				const arr = tmp.split('|');
+				values[arr[0]] = parseFloat(arr[1]);
+			});
+			return values;
+		};
+
+
+		const data = [];
+		_.forEach(points, point => {
+			const series = getSeries(point);
+			const tags = getTags(point);
+
+			if (!series || !tags) {
+				return;
+			}
+			const tmp = {
+				series: series,
+				tags: tags
+			};
+
+			const values = getValues(point);
+			if (values) {
+				tmp.values = values;
+			}
+			data.push(tmp);
 		});
-		return [data];
+		return data;
 	}
 }

@@ -1,18 +1,17 @@
 'use strict';
 const Influx = require('simple-influx');
 const config = localRequire('config');
-const _ = require('lodash');
+const debug = localRequire('helpers/debug');
 const clientDict = {};
 exports.write = write;
 
 
 function write(app, series, tags, values) {
-	console.dir(arguments);
+	debug('app:%s, series:%s, tags:%j, values:%j', app, series, tags, values);
 	const client = getClient(app);
 	if (!client) {
 		return;
 	}
-	values = _.extend({count: 1}, values);
 	tags.inst = config.name;
 
 	client.write(series)

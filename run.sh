@@ -5,4 +5,8 @@ curl -H "Content-Type: application/json" -X POST -d '{"series": "http", "tags":{
 
 
 
-curl "http://127.0.0.1:3000/add-points/albi?series=albi&tags=type|1||code|2&values=code|304||use|20"
+
+curl "http://127.0.0.1:3000/add-points/albi?point=series(http),tags(type|0,spdy|fast),values(use|30,code|500)&point=series(ajax),tags(type|1,spdy|slow),values(use|50,code|400)"
+
+
+

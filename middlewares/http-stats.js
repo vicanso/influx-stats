@@ -17,6 +17,8 @@ function httpStats(options) {
 			performance.createdAt = (new Date()).toISOString();
 		}
 		globals.set('performance.http', performance);
-		stats.write(config.app, 'http', _.pick(statsData, tagKeys), _.omit(statsData, tagKeys));
+		const tags = _.pick(statsData, tagKeys);
+		tags.inst = config.name;
+		stats.write(config.app, 'http', tags, _.omit(statsData, tagKeys));
 	});
 }

@@ -23,7 +23,9 @@
   "readmeFilename": "README.md",
   "scripts": {
     "pretest": "npm install",
-    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js tasks/*.js services/*.js router/*.js",
+    "eslint": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js tasks/*.js services/*.js router/*.js",
+    "client-test": "node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --",
+    "test": "npm run eslint && npm run client-test",
     "rm-node_modules": "node build/rm.js",
     "version": "node build/version",
     "prebuild": "npm run test && npm run rm-node_modules",
@@ -64,8 +66,10 @@
   },
   "devDependencies": {
     "eslint": "^2.2.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
     "rimraf": "^2.5.2"
   },
-  "appVersion": "2016-03-02T09:17:20.796Z",
+  "appVersion": "2016-03-07T07:27:33.683Z",
   "readme": "collect stats to influxdb"
 }

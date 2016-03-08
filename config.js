@@ -16,7 +16,7 @@ exports.app = pkg.name;
 exports.name = `${pkg.name}-${process.env.NAME || process.env.HOSTNAME || Date.now()}`;
 
 // app url prefix for all request 
-exports.appUrlPrefix = env === 'development' ? '' : '/albi';
+exports.appUrlPrefix = env === 'development' ? '' : '/influx-stats';
 
 // static file url prefix
 exports.staticUrlPrefix = '/static';

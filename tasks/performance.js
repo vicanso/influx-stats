@@ -31,7 +31,8 @@ function run(interval) {
 	const memoryIndex = _.sortedIndex([0, 100, 200, 500], physical);
 	stats.write(config.app, 'performance', {
 		status : ['', 'free', 'normal', 'busy'][lagIndex],
-		memory: ['', 'low', 'mid', 'high'][memoryIndex]
+		memory: ['', 'low', 'mid', 'high'][memoryIndex],
+		inst: config.name
 	}, {
 		lag: lag,
 		exec: parseInt(heapStats.total_heap_size_executable / MB),

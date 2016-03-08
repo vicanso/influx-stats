@@ -33,19 +33,19 @@ function routeStats(ctx, next) {
 		routePerformance.createdAt = (new Date()).toISOString();
 	}
 	const method = ctx.method.toUpperCase();
-	_.forEach(ctx.matched, (layer => {
-		const key = method + layer.path;
-		stats.write(config.app, 'http-route', {
-			method: method,
-			route: layer.path
-		});
-		// sdc.increment('route.' + key);
-		if (!routePerformance[key]) {
-			routePerformance[key] = 1;
-		} else {
-			routePerformance[key]++;
-		}
-	}));
+	const layer = _.get(ctx, 'matched[0]');
+	const key = method + layer.path;
+	stats.write(config.app, 'http-route', {
+		method: method,
+		route: layer.path,
+		inst: config.name
+	});
+	// sdc.increment('route.' + key);
+	if (!routePerformance[key]) {
+		routePerformance[key] = 1;
+	} else {
+		routePerformance[key]++;
+	}
 	return next();
 }
 

@@ -12,8 +12,6 @@ function write(app, series, tags, values) {
 	if (!client) {
 		return;
 	}
-	tags.inst = config.name;
-
 	client.write(series)
 		.tag(tags)
 		.value(values)
@@ -37,7 +35,7 @@ function getClient(app) {
 		protocol: urlInfo.protocol.substring(0, urlInfo.protocol.length - 1),
 		database: app
 	});
-	client.safeCreateDatabase().then(() => {
+	client.createDatabaseNotExists().then(() => {
 		console.info(`create database ${config.app} success`);
 	}).catch(err => {
 		console.error(err);

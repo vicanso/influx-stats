@@ -8,8 +8,45 @@ module.exports = (ctx) => {
 	_.forEach(data, item => {
 		stats.write(app, item.series, item.tags, item.values);
 	});
-	ctx.body = null;
+	ctx.status = 201;
 };
+
+
+function getSeries(str) {
+	const reg = /series\((\S+?)\)/;
+	const result = _.get(reg.exec(str), '[1]');
+	return result;
+}
+
+
+function getTags(str) {
+	const reg = /tags\((\S+?)\)/;
+	const result = _.get(reg.exec(str), '[1]');
+	if (!result) {
+		return;
+	}
+	const tags = {};
+	_.forEach(result.split(','), tmp => {
+		const arr = tmp.split('|');
+		tags[arr[0]] = arr[1];
+	});
+	return tags;
+}
+
+
+function getValues(str) {
+	const reg = /values\((\S+?)\)/;
+	const result = _.get(reg.exec(str), '[1]');
+	if (!result) {
+		return;
+	}
+	const values = {};
+	_.forEach(result.split(','), tmp => {
+		const arr = tmp.split('|');
+		values[arr[0]] = parseFloat(arr[1]);
+	});
+	return values;
+}
 
 
 function getData(method, ctx) {
@@ -21,41 +58,6 @@ function getData(method, ctx) {
 		if (!_.isArray(points)) {
 			points = [points];
 		}
-		const getSeries = (str) => {
-			const reg = /series\((\S+?)\)/
-			const result = _.get(reg.exec(str), '[1]');
-			return result;
-		};
-
-		const getTags = (str) => {
-			const reg = /tags\((\S+?)\)/
-			const result = _.get(reg.exec(str), '[1]');
-			if (!result) {
-				return;
-			}
-			const tags = {};
-			_.forEach(result.split(','), tmp => {
-				const arr = tmp.split('|');
-				tags[arr[0]] = arr[1];
-			});
-			return tags;
-		};
-
-		const getValues = (str) => {
-			const reg = /values\((\S+?)\)/
-			const result = _.get(reg.exec(str), '[1]');
-			if (!result) {
-				return;
-			}
-			const values = {};
-			_.forEach(result.split(','), tmp => {
-				const arr = tmp.split('|');
-				values[arr[0]] = parseFloat(arr[1]);
-			});
-			return values;
-		};
-
-
 		const data = [];
 		_.forEach(points, point => {
 			const series = getSeries(point);

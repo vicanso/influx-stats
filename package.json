@@ -1,0 +1,50 @@
+{
+  "name": "influxdb-collector",
+  "version": "0.0.1",
+  "description": "collect stats to influxdb",
+  "main": "app.js",
+  "scripts": {
+    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js",
+    "prebuild": "npm install && npm test",
+    "build": "node build.js",
+    "postbuild": "npm install --production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vicanso/influxdb-collector.git"
+  },
+  "keywords": [
+    "influx",
+    "influxdb",
+    "collector"
+  ],
+  "author": "Tree Xie <vicansocanbico@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vicanso/influxdb-collector/issues"
+  },
+  "homepage": "https://github.com/vicanso/influxdb-collector",
+  "appVersion": "2016-03-12T15:10:31.063Z",
+  "dependencies": {
+    "bluebird": "^3.3.4",
+    "http-errors": "^1.4.0",
+    "influxdb-nodejs": "0.0.7",
+    "koa": "^2.0.0-alpha.3",
+    "koa-bodyparser": "^3.0.0",
+    "koa-connection-limit": "^2.0.3",
+    "koa-http-stats": "^2.1.4",
+    "koa-log": "^2.0.0",
+    "koa-methodoverride": "^2.0.0",
+    "koa-mounting": "^2.0.1",
+    "koa-router-parser": "^2.0.2",
+    "micro-service": "0.0.3",
+    "moment": "^2.12.0",
+    "require-tree": "^1.1.1",
+    "timtam-logger": "^0.3.2",
+    "url-join": "0.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^2.4.0",
+    "rimraf": "^2.5.2"
+  }
+}

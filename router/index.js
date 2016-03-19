@@ -27,6 +27,8 @@ function routeStats(ctx, next) {
 	const method = ctx.method.toUpperCase();
 	const layer = _.get(ctx, 'matched[0]');
 	stats.write(config.app, 'http-route', {
+		matched: ctx.matched.length
+	}, {
 		inst: config.instance,
 		method: method,
 		route: layer.path

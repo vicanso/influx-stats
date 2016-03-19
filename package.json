@@ -4,7 +4,7 @@
   "description": "collect stats to influxdb",
   "main": "app.js",
   "scripts": {
-    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js",
+    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js && node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --",
     "prebuild": "npm install && npm test",
     "build": "node build.js",
     "postbuild": "npm install --production"
@@ -24,11 +24,11 @@
     "url": "https://github.com/vicanso/influxdb-collector/issues"
   },
   "homepage": "https://github.com/vicanso/influxdb-collector",
-  "appVersion": "2016-03-12T15:10:31.063Z",
+  "appVersion": "2016-03-19T12:03:47.024Z",
   "dependencies": {
     "bluebird": "^3.3.4",
     "http-errors": "^1.4.0",
-    "influxdb-nodejs": "0.0.7",
+    "influxdb-nodejs": "0.0.10",
     "koa": "^2.0.0-alpha.3",
     "koa-bodyparser": "^3.0.0",
     "koa-connection-limit": "^2.0.3",
@@ -41,10 +41,13 @@
     "moment": "^2.12.0",
     "require-tree": "^1.1.1",
     "timtam-logger": "^0.3.2",
+    "toobusy-js": "^0.4.3",
     "url-join": "0.0.1"
   },
   "devDependencies": {
     "eslint": "^2.4.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
     "rimraf": "^2.5.2"
   }
 }

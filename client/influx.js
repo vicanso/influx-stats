@@ -3,38 +3,66 @@
 var root = this;
 
 
-var queueData = [];
+var Cache = {
+	data: [],
+	max: 10,
+	add: function(item) {
+		this.data.push(item);
+		if(this.data.length > this.max) {
+			this.data.shift();
+		}
+		this.length = this.data.length;
+		return this;
+	},
+	length: 0,
+	toJSON: function() {
+		return this.data.slice(0);
+	},
+	clear: function() {
+		this.data.length = 0;
+		this.length = 0;
+	}
+};
+
 var influx = {
 	// 数据提交的地址
 	url: '/add-points/albi',
 	write: write,
 	getQueueData: getQueueData,
-	sync: sync
+	getQueueLength: getQueueLength,
+	sync: sync,
+	setQueueMax: setQueueMax
 };
 
-function isObject(v) {
-	return !!v && typeof v === 'object';
-}
 
 function getQueueData() {
-	return queueData.slice(0);
+	return Cache.toJSON();
 }
 
-function write(series, tags, values) {
+function setQueueMax(v) {
+	Cache.max = v;
+}
+
+function getQueueLength() {
+	return Cache.length;
+}
+
+function write(measurement, fields, tags) {
 	/* istanbul ignore if */
-	if (!series || !tags) {
-		throw new Error('series and tags cat not be null');
+	if (!measurement || !fields) {
+		throw new Error('measurement and fields cat not be null');
 	}
 	var data = {
-		series: series,
-		tags: tags
+		measurement: measurement,
+		fields: fields,
+		time: now()
 	};
-	if (values) {
-		data.values = values;
+	if (tags) {
+		data.tags = tags;
 	}
 	return {
 		queue: function() {
-			queueData.push(data);
+			Cache.add(data);
 		},
 		end: function(cb) {
 			send([data], cb);
@@ -51,11 +79,12 @@ function send(arr, cb) {
 	for(var i = 0, len = arr.length; i < len; i++){
 		var str = 'point=';
 		var data = arr[i];
-		str += 'series(' + data.series + ')';
-		str += ',' + getTags(data.tags);
-		if (data.values) {
-			str += ',' + getValues(data.values);
+		str += 'measurement(' + data.measurement + ')';
+		str += ',' + getFields(data.fields);
+		if (data.tags) {
+			str += ',' + getTags(data.tags);
 		}
+		str += ',time(' + data.time + ')';
 		queryStr.push(str);
 	}
 	var url = influx.url + '?' + queryStr.join('&');
@@ -65,28 +94,45 @@ function send(arr, cb) {
 	};
 	img.onerror = cb;
 	img.src = url;
-	arr.length = 0;
 }
 
 function sync(cb) {
-	send(queueData, cb);
+	send(Cache.toJSON(), cb);
+	Cache.clear();
 } 
 
 function getTags(tags) {
 	return 'tags(' + format(tags) + ')';
 }
 
-function getValues(values) {
-	return 'values(' + format(values) + ')';
+function getFields(fields) {
+	return 'fields(' + format(fields) + ')';
 }
 
 
 function format(obj) {
-	var str = '';
+	var arr = [];
 	for(var k in obj) {
-		str += (k + '|' + obj[k]);
+		arr.push(k + '|' + obj[k]);
 	}
-	return str;
+	return arr.join(',');
+}
+// 避免产生相同的timestamp
+var timestampIndex = 100000;
+function now() {
+	var time;
+	if (Date.now) {
+		time = Date.now();
+	} else {
+		time = (new Date()).getTime();
+	}
+	return '' + time + (++timestampIndex);
+}
+
+
+
+function isObject(v) {
+	return !!v && typeof v === 'object';
 }
 
 /* istanbul ignore if */

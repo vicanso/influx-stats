@@ -6,14 +6,16 @@ module.exports = (ctx) => {
 	const app = ctx.params.app;
 	const data = getData(ctx.method, ctx);
 	_.forEach(data, item => {
-		stats.write(app, item.series, item.tags, item.values);
+		if (item.measurement && item.fields) {
+			stats.write(app, item.measurement, item.fields, item.tags, item.time);
+		}
 	});
 	ctx.status = 201;
 };
 
 
-function getSeries(str) {
-	const reg = /series\((\S+?)\)/;
+function getMeasurement(str) {
+	const reg = /measurement\((\S+?)\)/;
 	const result = _.get(reg.exec(str), '[1]');
 	return result;
 }
@@ -33,19 +35,24 @@ function getTags(str) {
 	return tags;
 }
 
+function getTime(str) {
+	const reg = /time\((\S+?)\)/;
+	const result = _.get(reg.exec(str), '[1]');
+	return result;
+}
 
-function getValues(str) {
-	const reg = /values\((\S+?)\)/;
+function getFields(str) {
+	const reg = /fields\((\S+?)\)/;
 	const result = _.get(reg.exec(str), '[1]');
 	if (!result) {
 		return;
 	}
-	const values = {};
+	const fields = {};
 	_.forEach(result.split(','), tmp => {
 		const arr = tmp.split('|');
-		values[arr[0]] = parseFloat(arr[1]);
+		fields[arr[0]] = parseFloat(arr[1]);
 	});
-	return values;
+	return fields;
 }
 
 
@@ -60,21 +67,27 @@ function getData(method, ctx) {
 		}
 		const data = [];
 		_.forEach(points, point => {
-			const series = getSeries(point);
-			const tags = getTags(point);
+			const measurement = getMeasurement(point);
+			const fields = getFields(point);
 
-			if (!series || !tags) {
+			if (!measurement || !fields) {
 				return;
 			}
 			const tmp = {
-				series: series,
-				tags: tags
+				measurement: measurement,
+				fields: fields
 			};
 
-			const values = getValues(point);
-			if (values) {
-				tmp.values = values;
+			const tags = getTags(point);
+			if (tags) {
+				tmp.tags = tags;
 			}
+
+			const time = getTime(point);
+			if (time) {
+				tmp.time = time;
+			}
+
 			data.push(tmp);
 		});
 		return data;

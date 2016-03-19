@@ -1,31 +1,36 @@
 'use strict';
+const _ = require('lodash');
 const Influx = require('influxdb-nodejs');
 const urlJoin = require('url-join');
 const config = localRequire('config');
 const debug = localRequire('helpers/debug');
 const clientMap = new Map();
 const queueMax = 10;
-
+const throttleSync = _.throttle(sync, 10 * 1000);
 exports.write = write;
+exports.getClient = getClient;
 
-/**
- * [write description]
- * @param  {[type]} app    [description]
- * @param  {[type]} series [description]
- * @param  {[type]} tags   [description]
- * @param  {[type]} values [description]
- * @return {[type]}        [description]
- */
-function write(app, series, tags, values) {
-	debug('app:%s, series:%s, tags:%j, values:%j', app, series, tags, values);
+
+function write(app, measurement, fields, tags, time) {
+	if (!app || !measurement || !fields) {
+		throw new Error('app, measurement an fields can not be null');
+	}
+	debug('app:%s, measurement:%s, fields:%j, tags:%j', app, measurement, fields,
+		tags);
 	const client = getClient(app);
 	if (!client) {
 		return;
 	}
-	client.write(series)
-		.tag(tags)
-		.value(values)
-		.queue();
+	const writer = client.write(measurement)
+		.field(fields);
+	if (tags) {
+		writer.tag(tags);
+	}
+	if (time) {
+		writer.time(time);
+	}
+	throttleSync();
+	writer.queue();
 	if (client.writeQueueLength > queueMax) {
 		client.syncWrite().catch(err => {
 			console.error('influxdb sync fail:', err);
@@ -57,4 +62,15 @@ function getClient(app) {
 	});
 	clientMap.set(app, client);
 	return client;
+}
+
+
+function sync() {
+	clientMap.forEach(client => {
+		if (client.writeQueueLength) {
+			client.syncWrite().catch(err => {
+				console.error('influxdb sync fail:', err);
+			});
+		}
+	});
 }

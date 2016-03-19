@@ -14,7 +14,8 @@ function httpStats(options) {
 	const tagKeys = 'status spdy size busy'.split(' ');
 	return require('koa-http-stats')(options, (performance, statsData) => {
 		const tags = _.pick(statsData, tagKeys);
+		const fields = _.omit(statsData, tagKeys);
 		tags.inst = config.instance;
-		stats.write(config.app, 'http', tags, _.omit(statsData, tagKeys));
+		stats.write(config.app, 'http', fields, tags);
 	});
 }

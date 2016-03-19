@@ -1,6 +1,7 @@
 'use strict';
 const config = localRequire('config');
 const backendRefreshInterval = 500 * 1000;
+localRequire('tasks/performance')(5 * 1000);
 if (!config.etcd) {
 	return;
 }

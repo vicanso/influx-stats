@@ -1,6 +1,6 @@
 # Influxdb-Collector
 
-Collect stats to influxdb
+Collect statistical data to influxdb
 
 ## Installation
 
@@ -13,25 +13,25 @@ $ git clone https://github.com/vicanso/influxdb-collector.git
 add single point use post method
 
 ```bash
-curl -H "Content-Type: application/json" -X POST -d '{"series": "http", "tags":{"type": "0"},"values":{"status":200}}' http://127.0.0.1:3000/add-points/albi
+curl -H "Content-Type: application/json" -X POST -d '{"measurement": "http", "tags":{"type": "0"},"fields":{"status":200},"time":"1422568543702900257"}' http://127.0.0.1:3000/add-points/albi
 ```
 
 add multi points use post method
 
 ```bash
-curl -H "Content-Type: application/json" -X POST -d '[{"series": "http", "tags":{"type": "0"},"values":{"status":200}},{"series": "ajax", "tags":{"type": "1"},"values":{"status":500}}]' http://127.0.0.1:3000/add-points/albi
+curl -H "Content-Type: application/json" -X POST -d '[{"measurement": "http", "tags":{"type": "0"},"fields":{"status":200}},{"measurement": "ajax", "tags":{"type": "1"},"fields":{"status":500}}]' http://127.0.0.1:3000/add-points/albi
 ```
 
 add single point use get method
  
 ```bash
-curl "http://127.0.0.1:3000/add-points/albi?point=series(http),tags(type|0,spdy|fast),values(use|30,code|500)"
+curl "http://127.0.0.1:3000/add-points/albi?point=measurement(http),fields(use|30,code|200),tags(type|2,spdy|fast),time(1422568543702910257)"
 ```
 
 add multi points use get method
 
 ```bash
-curl "http://127.0.0.1:3000/add-points/albi?point=series(http),tags(type|0,spdy|fast),values(use|30,code|500)&point=series(ajax),tags(type|1,spdy|slow),values(use|50,code|400)"
+curl "http://127.0.0.1:3000/add-points/albi?point=measurement(http),tags(type|0,spdy|fast),fields(use|30,code|500),time(1422568543702905257)&point=measurement(ajax),tags(type|1,spdy|slow),fields(use|50,code|400),time(1422568543702909257)"
 ```
 
 ## License

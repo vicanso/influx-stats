@@ -1,13 +1,19 @@
 'use strict';
 const _ = require('lodash');
 const stats = localRequire('helpers/stats');
+const debug = localRequire('helpers/debug');
 
 module.exports = (ctx) => {
 	const app = ctx.params.app;
 	const data = getData(ctx.method, ctx);
 	_.forEach(data, item => {
-		if (item.measurement && item.fields) {
-			stats.write(app, item.measurement, item.fields, item.tags, item.time);
+		if (item.m && item.f) {
+			debug('stats write, app:%s, data:%j', app, item);
+			// 时间设置的是ms，补6个位
+			if (item.time && item.time.length === 13) {
+				item.time += _.random(100000, 999999);
+			}
+			stats.write(app, item.m, item.f, item.t, item.time);
 		}
 	});
 	ctx.status = 201;
@@ -15,14 +21,14 @@ module.exports = (ctx) => {
 
 
 function getMeasurement(str) {
-	const reg = /measurement\((\S+?)\)/;
+	const reg = /m\((\S+?)\)/;
 	const result = _.get(reg.exec(str), '[1]');
 	return result;
 }
 
 
 function getTags(str) {
-	const reg = /tags\((\S+?)\)/;
+	const reg = /t\((\S+?)\)/;
 	const result = _.get(reg.exec(str), '[1]');
 	if (!result) {
 		return;
@@ -42,7 +48,7 @@ function getTime(str) {
 }
 
 function getFields(str) {
-	const reg = /fields\((\S+?)\)/;
+	const reg = /f\((\S+?)\)/;
 	const result = _.get(reg.exec(str), '[1]');
 	if (!result) {
 		return;
@@ -74,13 +80,13 @@ function getData(method, ctx) {
 				return;
 			}
 			const tmp = {
-				measurement: measurement,
-				fields: fields
+				m: measurement,
+				f: fields
 			};
 
 			const tags = getTags(point);
 			if (tags) {
-				tmp.tags = tags;
+				tmp.t = tags;
 			}
 
 			const time = getTime(point);

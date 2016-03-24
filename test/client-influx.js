@@ -9,7 +9,7 @@ describe('influx-client', () => {
 
 			}
 			set src(v) {
-				assert.equal(v.indexOf('/add-points/albi?point=measurement(http),fields(use|30,code|200),tags(type|2,spdy|fast),time('), 0);
+				assert.equal(v.indexOf('/add-points/albi?point=m(http),f(use|30,code|200),t(type|2,spdy|fast),time('), 0);
 				setTimeout(this.onload, 100);
 			}
 		}
@@ -31,7 +31,7 @@ describe('influx-client', () => {
 
 			}
 			set src(v) {
-				assert.equal(v.indexOf('/add-points/albi?point=measurement(http),fields(use|30,code|200),time('), 0);
+				assert.equal(v.indexOf('/add-points/albi?point=m(http),f(use|30,code|200),time('), 0);
 				setTimeout(this.onload, 100);
 			}
 		}
@@ -74,8 +74,8 @@ describe('influx-client', () => {
 			}
 			set src(v) {
 				const arr = v.split('&');
-				assert.equal(arr[0].indexOf('/add-points/albi?point=measurement(http),fields(use|30,code|200),tags(type|2,spdy|fast),time('), 0);
-				assert.equal(arr[1].indexOf('point=measurement(http),fields(use|300,code|500),tags(type|5,spdy|slow),time('), 0);
+				assert.equal(arr[0].indexOf('/add-points/albi?point=m(http),f(use|30,code|200),t(type|2,spdy|fast),time('), 0);
+				assert.equal(arr[1].indexOf('point=m(http),f(use|300,code|500),t(type|5,spdy|slow),time('), 0);
 				setTimeout(this.onload, 100);
 			}
 		}

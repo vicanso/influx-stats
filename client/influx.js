@@ -79,7 +79,7 @@ function send(arr, cb) {
 	for(var i = 0, len = arr.length; i < len; i++){
 		var str = 'point=';
 		var data = arr[i];
-		str += 'measurement(' + data.measurement + ')';
+		str += 'm(' + data.measurement + ')';
 		str += ',' + getFields(data.fields);
 		if (data.tags) {
 			str += ',' + getTags(data.tags);
@@ -102,11 +102,11 @@ function sync(cb) {
 } 
 
 function getTags(tags) {
-	return 'tags(' + format(tags) + ')';
+	return 't(' + format(tags) + ')';
 }
 
 function getFields(fields) {
-	return 'fields(' + format(fields) + ')';
+	return 'f(' + format(fields) + ')';
 }
 
 
@@ -117,8 +117,6 @@ function format(obj) {
 	}
 	return arr.join(',');
 }
-// 避免产生相同的timestamp
-var timestampIndex = 100000;
 function now() {
 	var time;
 	if (Date.now) {
@@ -126,7 +124,7 @@ function now() {
 	} else {
 		time = (new Date()).getTime();
 	}
-	return '' + time + (++timestampIndex);
+	return '' + time;
 }
 
 

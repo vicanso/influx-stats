@@ -1,7 +1,6 @@
 'use strict';
 const globals = localRequire('globals');
 const httpError = localRequire('helpers/error');
-module.exports = ping;
 
 /**
  * [ping description]
@@ -9,9 +8,12 @@ module.exports = ping;
  * @return {[type]}     [description]
  */
 function ping(ctx) {
-	if (globals.get('status') !== 'running') {
-		throw httpError('the server is not running now!');
-	} else {
-		ctx.body = 'pong';
-	}
+  const cloneCtx = ctx;
+  if (globals.get('status') !== 'running') {
+    throw httpError('the server is not running now!');
+  } else {
+    cloneCtx.body = 'pong';
+  }
 }
+
+module.exports = ping;

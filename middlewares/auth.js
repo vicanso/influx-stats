@@ -2,9 +2,7 @@
 const crypto = require('crypto');
 const _ = require('lodash');
 const config = localRequire('config');
-const httpError = localRequire('helpers/error');
-
-exports.admin = admin;
+const error = localRequire('helpers/error');
 
 /**
  * [admin description]
@@ -13,13 +11,15 @@ exports.admin = admin;
  * @return {[type]}        [description]
  */
 function admin(ctx, next) {
-	const shasum = crypto.createHash('sha1');
-	const token = _.get(ctx, 'request.body.jtToken');
-	if (token && shasum.update(token).digest('hex') === config.adminToken) {
-		return next();
-	} else {
-		throw httpError('token is invalid', 403, {
-			type: 'admin-check'
-		});
-	}
+  const shasum = crypto.createHash('sha1');
+  const token = _.get(ctx, 'request.body.jtToken');
+  if (token && shasum.update(token).digest('hex') === config.adminToken) {
+    return next();
+  }
+
+  throw error('token is invalid', 403, {
+    type: 'admin-check',
+  });
 }
+
+exports.admin = admin;

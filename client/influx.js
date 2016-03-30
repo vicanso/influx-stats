@@ -2,7 +2,6 @@
 'use strict';
 var root = this;
 
-
 var Cache = {
 	data: [],
 	max: 10,

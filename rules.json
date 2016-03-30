@@ -1,0 +1,10 @@
+{
+	"vicanso": {
+		"albi": {
+			"referer": "~github.com/vicanso"
+		},
+		"timtam": {
+			"x-influx-token": "Tree.Xie"
+		}
+	}
+}

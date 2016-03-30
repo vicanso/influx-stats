@@ -1,12 +1,9 @@
 'use strict';
 const _ = require('lodash');
 const globals = {
-	status: 'running'
+  status: 'running',
 };
 
-
-exports.get = get;
-exports.set = set;
 
 /**
  * [get description]
@@ -14,9 +11,10 @@ exports.set = set;
  * @return {[type]}   [description]
  */
 function get(k) {
-	if (k) {
-		return _.get(globals, k);
-	}
+  if (!k) {
+    throw new Error('key can not be null');
+  }
+  return _.get(globals, k);
 }
 
 /**
@@ -25,7 +23,11 @@ function get(k) {
  * @param {[type]} v [description]
  */
 function set(k, v) {
-	if (k) {
-		_.set(globals, k, v);
-	}
+  if (!k) {
+    throw new Error('key can not be null');
+  }
+  _.set(globals, k, v);
 }
+
+exports.get = get;
+exports.set = set;

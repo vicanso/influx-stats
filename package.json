@@ -4,7 +4,7 @@
   "description": "collect stats to influxdb",
   "main": "app.js",
   "scripts": {
-    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js && node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --",
+    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js tasks/*.js && node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --",
     "prebuild": "npm install && npm test",
     "build": "node build.js",
     "postbuild": "npm install --production"
@@ -28,7 +28,7 @@
   "dependencies": {
     "bluebird": "^3.3.4",
     "http-errors": "^1.4.0",
-    "influxdb-nodejs": "0.0.10",
+    "influxdb-nodejs": "0.0.11",
     "koa": "^2.0.0-alpha.3",
     "koa-bodyparser": "^3.0.0",
     "koa-connection-limit": "^2.0.3",
@@ -39,13 +39,14 @@
     "koa-router-parser": "^2.0.2",
     "micro-service": "0.0.3",
     "moment": "^2.12.0",
-    "performance-nodejs": "0.0.3",
+    "performance-nodejs": "0.0.4",
     "require-tree": "^1.1.1",
     "timtam-logger": "^0.3.2",
-    "url-join": "0.0.1"
+    "url-join": "1.0.0"
   },
   "devDependencies": {
-    "eslint": "^2.4.0",
+    "eslint": "^2.5.3",
+    "eslint-config-airbnb": "^6.2.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2"

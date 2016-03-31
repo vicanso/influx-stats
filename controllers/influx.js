@@ -3,6 +3,7 @@ const _ = require('lodash');
 const stats = localRequire('helpers/stats');
 const error = localRequire('helpers/error');
 const rules = localRequire('rules');
+const config = localRequire('config');
 
 function getMeasurement(str) {
   const reg = /m\((\S+?)\)/;
@@ -112,7 +113,8 @@ module.exports = (ctx) => {
       throw error('token is wrong', 403);
     }
   }
-  const data = getData(cloneCtx.method, cloneCtx);
+  const data = getData(ctx.method, ctx);
+  let count = 0;
   _.forEach(data, item => {
     const tmp = item;
     if (tmp.m && tmp.f) {
@@ -121,7 +123,14 @@ module.exports = (ctx) => {
         tmp.time += _.random(100000, 999999);
       }
       stats.write(`${account}-${app}`, tmp.m, tmp.f, tmp.t, tmp.time);
+      count++;
     }
+  });
+  stats.write(config.app, 'write-point', {
+    account,
+    app,
+  }, {
+    count,
   });
   cloneCtx.status = 201;
 };

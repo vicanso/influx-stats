@@ -37,6 +37,7 @@ function init(etcdServer) {
   client.set(data);
   client.addTag('backend:http', `app:${config.app}`, 'ping:http');
   client.ttl(600);
+  return client;
 }
 
 exports.init = init;

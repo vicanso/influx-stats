@@ -1,6 +1,6 @@
 {
   "name": "influxdb-collector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "collect stats to influxdb",
   "main": "app.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "url": "https://github.com/vicanso/influxdb-collector/issues"
   },
   "homepage": "https://github.com/vicanso/influxdb-collector",
-  "appVersion": "2016-03-19T12:03:47.024Z",
+  "appVersion": "2016-03-31T08:24:08.228Z",
   "dependencies": {
     "bluebird": "^3.3.4",
     "http-errors": "^1.4.0",

@@ -13,16 +13,19 @@ const stats = localRequire('helpers/stats');
  * @return {[type]}        [description]
  */
 function routeStats(ctx, next) {
-  const method = ctx.method.toUpperCase();
-  const layer = _.get(ctx, 'matched[0]');
-  stats.write(config.app, 'http-route', {
-    matched: ctx.matched.length,
-  }, {
-    inst: config.instance,
-    method,
-    route: layer.path,
+  const startedAt = Date.now();
+  return next().then(() => {
+    const method = ctx.method.toUpperCase();
+    const use = Date.now() - startedAt;
+    stats.write(config.app, 'http-route', {
+      use,
+    }, {
+      inst: config.instance,
+      method,
+      spdy: _.sortedIndex([10, 30, 100], use),
+      route: _.get(ctx, 'matched[0].path', 'unknown'),
+    });
   });
-  return next();
 }
 
 /**

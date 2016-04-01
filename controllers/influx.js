@@ -127,10 +127,10 @@ module.exports = (ctx) => {
     }
   });
   stats.write(config.app, 'write-point', {
+    count,
+  }, {
     account,
     app,
-  }, {
-    count,
   });
   cloneCtx.status = 201;
 };

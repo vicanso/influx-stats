@@ -7,12 +7,17 @@ const debug = localRequire('helpers/debug');
 const clientMap = new Map();
 const queueMax = 10;
 
+
+function sync(client) {
+  client.syncWrite().catch(err => {
+    console.error('influxdb sync fail:', err.response.error);
+  });
+}
+
 const throttleSync = _.throttle(() => {
   clientMap.forEach(client => {
     if (client.writeQueueLength) {
-      client.syncWrite().catch(err => {
-        console.error('influxdb sync fail:', err);
-      });
+      sync(client);
     }
   });
 }, 10 * 1000);
@@ -62,9 +67,7 @@ function write(app, measurement, fields, tags, time) {
   throttleSync();
   writer.queue();
   if (client.writeQueueLength > queueMax) {
-    client.syncWrite().catch(err => {
-      console.error('influxdb sync fail:', err);
-    });
+    sync(client);
   }
   return client;
 }

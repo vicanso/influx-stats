@@ -24,7 +24,7 @@
     "url": "https://github.com/vicanso/influxdb-collector/issues"
   },
   "homepage": "https://github.com/vicanso/influxdb-collector",
-  "appVersion": "2016-04-01T01:47:15.624Z",
+  "appVersion": "2016-04-02T05:05:22.996Z",
   "dependencies": {
     "bluebird": "^3.3.4",
     "http-errors": "^1.4.0",

@@ -32,6 +32,9 @@ exports.limitOptions = {
   high: 500,
 };
 
+// rules url，eg: http://7xod89.com1.z0.glb.clouddn.com/rules.json
+exports.rules = process.env.RULES;
+
 // http request concurrency reach high, wait for `limitResetInterval` to reset app 'running'
 exports.limitResetInterval = 5000;
 

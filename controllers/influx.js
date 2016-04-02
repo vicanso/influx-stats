@@ -1,8 +1,8 @@
 'use strict';
 const _ = require('lodash');
 const stats = localRequire('helpers/stats');
+const rules = localRequire('helpers/rules');
 const error = localRequire('helpers/error');
-const rules = localRequire('rules');
 const config = localRequire('config');
 
 function getMeasurement(str) {
@@ -81,37 +81,12 @@ function getData(method, ctx) {
   return data;
 }
 
-
-function validate(ctx, rule) {
-  let valid = true;
-  _.forEach(rule, (v, k) => {
-    if (!valid) {
-      return;
-    }
-    const value = ctx.get(k);
-    if (v.charAt(0) === '~') {
-      const reg = new RegExp(v.substring(1), 'gi');
-      valid = reg.test(value);
-    } else {
-      valid = v === value;
-    }
-  });
-  return valid;
-}
-
 module.exports = (ctx) => {
   const cloneCtx = ctx;
   const account = ctx.params.account;
   const app = ctx.params.app;
-  const accountRule = rules[account];
-  if (!accountRule) {
-    throw error('account is not setting', 400);
-  }
-  const rule = accountRule[app];
-  if (rule) {
-    if (!validate(ctx, rule)) {
-      throw error('token is wrong', 403);
-    }
+  if (!rules.validate(ctx, account, app)) {
+    throw error('token is wrong', 403);
   }
   const data = getData(ctx.method, ctx);
   let count = 0;

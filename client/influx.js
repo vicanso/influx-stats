@@ -3,14 +3,18 @@
 var root = this;
 
 var Cache = {
+	key: 'Influx-Storage',
 	data: [],
 	max: 10,
+	storage: localStorage,
 	add: function(item) {
 		this.data.push(item);
+		/* istanbul ignore if */
 		if(this.data.length > this.max) {
 			this.data.shift();
 		}
 		this.length = this.data.length;
+		this.sync();
 		return this;
 	},
 	length: 0,
@@ -20,8 +24,26 @@ var Cache = {
 	clear: function() {
 		this.data.length = 0;
 		this.length = 0;
+		return this;
+	},
+	sync: function(type) {
+		type = type || 'to';
+		var storage = this.storage;
+		/* istanbul ignore if */
+		if (!storage || !JSON) {
+			return;
+		}
+		if (type === 'from') {
+			var arr = JSON.parse(storage.getItem(this.key));
+			this.data = this.data.concat(arr);
+			this.length = this.data.length;
+		} else {
+			storage.setItem(this.key, JSON.stringify(this.data));
+		}
+		return this;
 	}
 };
+Cache.sync('from');
 
 var influx = {
 	// 数据提交的地址
@@ -30,7 +52,8 @@ var influx = {
 	getQueueData: getQueueData,
 	getQueueLength: getQueueLength,
 	sync: sync,
-	setQueueMax: setQueueMax
+	setQueueMax: setQueueMax,
+	Cache: Cache
 };
 
 
@@ -118,6 +141,7 @@ function format(obj) {
 }
 function now() {
 	var time;
+	/* istanbul ignore else */
 	if (Date.now) {
 		time = Date.now();
 	} else {

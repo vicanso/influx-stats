@@ -1,8 +1,29 @@
 'use strict';
 const assert = require('assert');
+const localStorage = {
+	list: {
+		'Influx-Storage': '[{"measurement":"http","fields":{"use":30,"code":200},"time":"1459851892266","tags":{"type":"2","spdy":"fast"}}]'
+	},
+	setItem: (k, v) => {
+		localStorage.list[k] = v;
+		return localStorage;
+	},
+	getItem: k => {
+		return localStorage.list[k];
+	}
+};
+global.localStorage = localStorage;
+
 const influx = require('../client/influx');
 
 describe('influx-client', () => {
+
+	it('get point from cache success', done => {
+		assert.equal(influx.Cache.toJSON().length, 1);
+		influx.Cache.clear();
+		done();
+	});
+
 	it('write point success', done => {
 		class Image {
 			constructor() {
@@ -64,6 +85,9 @@ describe('influx-client', () => {
 		assert.equal(influx.getQueueLength(), 2);
 
 		assert.equal(influx.getQueueData().length, 2);
+
+		assert.equal(JSON.parse(localStorage.list['Influx-Storage']).length, 2);
+
 		done();
 	});
 
@@ -84,4 +108,7 @@ describe('influx-client', () => {
 
 		influx.sync(done);
 	});
+
+
+
 });

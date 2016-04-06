@@ -12,7 +12,7 @@ rm -rf node_modules
 
 npm i --production
 
-modclean -n safe,caution,danger
+modclean -n safe,caution,danger -r
 
 docker build -t vicanso/influxdb-collector .
 

@@ -19,6 +19,7 @@ const influx = require('../client/influx');
 describe('influx-client', () => {
 
 	it('get point from cache success', done => {
+		influx.Cache.sync('from');
 		assert.equal(influx.Cache.toJSON().length, 1);
 		influx.Cache.clear();
 		done();

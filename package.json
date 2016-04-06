@@ -1,13 +1,10 @@
 {
   "name": "influxdb-collector",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "collect stats to influxdb",
   "main": "app.js",
   "scripts": {
-    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js tasks/*.js && node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --",
-    "prebuild": "npm install && npm test",
-    "build": "node build.js",
-    "postbuild": "npm install --production"
+    "test": "node ./node_modules/.bin/eslint *.js controllers/*.js helpers/*.js middlewares/*.js router/*.js tasks/*.js && node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test/*.js --"
   },
   "repository": {
     "type": "git",
@@ -24,7 +21,7 @@
     "url": "https://github.com/vicanso/influxdb-collector/issues"
   },
   "homepage": "https://github.com/vicanso/influxdb-collector",
-  "appVersion": "2016-04-05T13:08:25.131Z",
+  "appVersion": "2016-04-06T02:08:06.121Z",
   "dependencies": {
     "bluebird": "^3.3.4",
     "http-errors": "^1.4.0",

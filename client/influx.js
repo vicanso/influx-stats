@@ -43,7 +43,6 @@ var Cache = {
 		return this;
 	}
 };
-Cache.sync('from');
 
 var influx = {
 	// 数据提交的地址

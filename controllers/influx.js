@@ -89,23 +89,37 @@ module.exports = (ctx) => {
     throw error('token is wrong', 403);
   }
   const data = getData(ctx.method, ctx);
+  const now = Date.now();
+  // 允许统计时间是delay时间之前生成的（因为客户端有可能先缓存统计数据，再一齐发送）
+  const min = `${now - config.delay}000000`;
+  // 允许客户端的时间与服务器有5秒的时间偏差
+  const max = `${now + 5 * 1000}999999`;
   let count = 0;
   _.forEach(data, item => {
     const tmp = item;
     if (tmp.m && tmp.f) {
       // 时间设置的是ms，补6个位
-      if (tmp.time && tmp.time.length === 13) {
-        tmp.time += _.random(100000, 999999);
+      if (tmp.time) {
+        if (tmp.time.length === 13) {
+          tmp.time += _.random(100000, 999999);
+        }
+        if (tmp.time < min || tmp.time > max) {
+          return;
+        }
       }
       stats.write(`${account}-${app}`, tmp.m, tmp.f, tmp.t, tmp.time);
       count++;
     }
   });
-  stats.write(config.app, 'write-point', {
-    count,
-  }, {
-    account,
-    app,
-  });
-  cloneCtx.status = 201;
+  if (count) {
+    stats.write(config.app, 'write-point', {
+      count,
+    }, {
+      account,
+      app,
+    });
+  }
+  cloneCtx.body = {
+    count: count
+  };
 };

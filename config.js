@@ -40,3 +40,6 @@ exports.limitResetInterval = 5000;
 
 // admin token (jenny)
 exports.adminToken = '6a3f4389a53c889b623e67f385f28ab8e84e5029';
+
+// 统计数据的delay时间(5分钟)
+exports.delay = 300 * 1000;

@@ -120,6 +120,6 @@ module.exports = (ctx) => {
     });
   }
   cloneCtx.body = {
-    count: count
+    count,
   };
 };

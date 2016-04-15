@@ -19,7 +19,7 @@ exports.appUrlPrefix = env === 'development' ? '' : '/influxdb-collector';
 exports.log = process.env.LOG;
 
 // http log type
-const fmt = ':remote-addr ":method :url HTTP/:http-version" :status :length ":user-agent"';
+const fmt = ':remote-addr :cookie[influx] ":method :url HTTP/:http-version" :status :length ":user-agent"';
 exports.logType = env === 'development' ? 'dev' : fmt;
 
 exports.etcd = process.env.ETCD;

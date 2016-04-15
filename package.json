@@ -39,7 +39,8 @@
     "performance-nodejs": "0.0.4",
     "require-tree": "^1.1.1",
     "timtam-logger": "^0.3.2",
-    "url-join": "1.0.0"
+    "url-join": "1.0.0",
+    "uuid": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^2.5.3",

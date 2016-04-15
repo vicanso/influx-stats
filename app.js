@@ -13,7 +13,7 @@ function initServer(port) {
   // trust proxy
   app.proxy = true;
 
-  app.keys = ['im a newer secret', 'i like turtle'];
+  app.keys = ['I am tree xie', 'My account is vicanso'];
 
   // error handler
   app.use(middlewares.error);

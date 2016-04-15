@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash');
+const uuid = require('uuid');
 const stats = localRequire('helpers/stats');
 const rules = localRequire('helpers/rules');
 const error = localRequire('helpers/error');
@@ -91,23 +92,17 @@ module.exports = (ctx) => {
   const data = getData(ctx.method, ctx);
   const now = Date.now();
   // 允许统计时间是delay时间之前生成的（因为客户端有可能先缓存统计数据，再一齐发送）
-  const min = `${now - config.delay}000000`;
+  const min = `${now - config.delay}`;
   // 允许客户端的时间与服务器有5秒的时间偏差
-  const max = `${now + 5 * 1000}999999`;
+  const max = `${now + 5 * 1000}`;
   let count = 0;
   _.forEach(data, item => {
-    const tmp = item;
-    if (tmp.m && tmp.f) {
-      // 时间设置的是ms，补6个位
-      if (tmp.time) {
-        if (tmp.time.length === 13) {
-          tmp.time += _.random(100000, 999999);
-        }
-        if (tmp.time < min || tmp.time > max) {
-          return;
-        }
+    if (item.m && item.f && rules.isLegalMeasurement(account, app, item.m)) {
+      // 对point的生成时间做判断
+      if (item.time && (item.time.length !== 13 || item.time < min || item.time > max)) {
+        return;
       }
-      stats.write(`${account}-${app}`, tmp.m, tmp.f, tmp.t, tmp.time);
+      stats.write(`${account}-${app}`, item.m, item.f, item.t, item.time);
       count++;
     }
   });
@@ -119,6 +114,11 @@ module.exports = (ctx) => {
       app,
     });
   }
+
+  if (!ctx.cookies.get('influx')) {
+    ctx.cookies.set('influx', uuid.v4());
+  }
+
   cloneCtx.body = {
     count,
   };

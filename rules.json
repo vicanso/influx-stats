@@ -1,10 +1,18 @@
 {
-	"vicanso": {
-		"albi": {
-			"referer": "~github.com/vicanso"
-		},
-		"timtam": {
-			"x-influx-token": "Tree.Xie"
-		}
-	}
+  "vicanso": {
+    "albi": {
+      "headers": {
+        "referer": "~github.com/vicanso"
+      },
+      "measurement": [
+        "http"
+      ]
+    },
+    "timtam": {
+      "headers": {
+        "x-influx-token": "Tree.Xie"
+      },
+      "measurement": "*"
+    }
+  }
 }

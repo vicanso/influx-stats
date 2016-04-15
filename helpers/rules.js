@@ -5,9 +5,9 @@ const error = localRequire('helpers/error');
 const request = require('superagent');
 let influxRules;
 
-function _validate(ctx, rule) {
+function _validate(ctx, headers) {
   let valid = true;
-  _.forEach(rule, (v, k) => {
+  _.forEach(headers, (v, k) => {
     if (!valid) {
       return;
     }
@@ -31,25 +31,10 @@ function validate(ctx, account, app) {
     throw error('account is not setting', 404);
   }
   const rule = accountRule[app];
-  if (rule) {
-    if (!_validate(ctx, rule)) {
-      throw error('token is wrong', 403);
-    }
+  if (!rule) {
+    throw error('rule is not set', 400);
   }
-  let valid = true;
-  _.forEach(rule, (v, k) => {
-    if (!valid) {
-      return;
-    }
-    const value = ctx.get(k);
-    if (v.charAt(0) === '~') {
-      const reg = new RegExp(v.substring(1), 'gi');
-      valid = reg.test(value);
-    } else {
-      valid = v === value;
-    }
-  });
-  return valid;
+  return _validate(ctx, rule.headers);
 }
 
 function getRules(url) {
@@ -63,6 +48,14 @@ function getRules(url) {
       }
     });
   });
+}
+
+function isLegalMeasurement(account, app, m) {
+  const measurement = _.get(influxRules, `${account}.${app}.measurement`);
+  if (measurement === '*') {
+    return true;
+  }
+  return !!~_.indexOf(measurement, m);
 }
 
 function initRules() {
@@ -82,3 +75,4 @@ function initRules() {
 initRules();
 
 exports.validate = validate;
+exports.isLegalMeasurement = isLegalMeasurement;

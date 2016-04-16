@@ -83,7 +83,6 @@ function getData(method, ctx) {
 }
 
 module.exports = (ctx) => {
-  const cloneCtx = ctx;
   const account = ctx.params.account;
   const app = ctx.params.app;
   if (!rules.validate(ctx, account, app)) {
@@ -119,7 +118,5 @@ module.exports = (ctx) => {
     ctx.cookies.set('influx', uuid.v4());
   }
 
-  cloneCtx.body = {
-    count,
-  };
+  ctx.set('X-Count', count);
 };

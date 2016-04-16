@@ -1,6 +1,6 @@
 {
   "name": "influxdb-collector",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "collect stats to influxdb",
   "main": "app.js",
   "scripts": {
@@ -23,9 +23,10 @@
   "homepage": "https://github.com/vicanso/influxdb-collector",
   "appVersion": "2016-04-06T02:08:06.121Z",
   "dependencies": {
-    "bluebird": "^3.3.4",
+    "bluebird": "^3.3.5",
+    "debug": "^2.2.0",
     "http-errors": "^1.4.0",
-    "influxdb-nodejs": "0.0.11",
+    "influxdb-nodejs": "0.0.12",
     "koa": "^2.0.0-alpha.3",
     "koa-bodyparser": "^3.0.0",
     "koa-connection-limit": "^2.0.3",
@@ -34,19 +35,19 @@
     "koa-methodoverride": "^2.0.0",
     "koa-mounting": "^2.0.1",
     "koa-router-parser": "^2.0.2",
+    "lodash": "^4.11.1",
     "micro-service": "0.0.3",
     "moment": "^2.12.0",
     "performance-nodejs": "0.0.4",
     "require-tree": "^1.1.1",
     "timtam-logger": "^0.3.2",
-    "url-join": "1.0.0",
+    "url-join": "^1.1.0",
     "uuid": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^2.5.3",
-    "eslint-config-airbnb": "^6.2.0",
+    "eslint-config-airbnb": "^7.0.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.4.5",
-    "rimraf": "^2.5.2"
+    "mocha": "^2.4.5"
   }
 }
